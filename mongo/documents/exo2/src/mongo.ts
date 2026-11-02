@@ -6,8 +6,17 @@ await client.connect();
 
 const products = client.db("marketplace").collection("products")
 
-const result = await products.find().toArray();
+const result = await products
+  .find({
+    "variants": {
+      $elemMatch: {
+        price: { $lt: 1600 },
+        stock: { $gt: 0},
+      },
+    },
+  })
+  .toArray();
 
-console.log(result);
+console.dir(result, {depth: 10});
 
 await client.close()

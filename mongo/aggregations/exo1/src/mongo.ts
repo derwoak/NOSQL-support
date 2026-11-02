@@ -7,7 +7,20 @@ await client.connect();
 const commands = client.db("marketplace").collection("commands")
 
 const result = await commands.aggregate([
-
+  {
+    $match: {
+      status: "paid",
+      createdAt: { $gte: new Date("2026-09-01T00:00:00Z") },
+    }
+  },
+  {
+    $project: {
+      _id: 0,
+      commandId: { $toString: "$_id" },
+      customerId: "$customer.id",
+      linesCount: { $size: "$lines" },
+    }
+  }
 ]).toArray();
 
 console.log(result);

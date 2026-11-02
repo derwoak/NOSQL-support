@@ -6,8 +6,16 @@ await client.connect();
 
 const products = client.db("marketplace").collection("products")
 
-const result = await products.find().toArray();
+// Les produits de la catégorie "accessories" ayant au moins 20 unités en stock
+const result = await products
+  .find({
+    "categories.id": "accessories",
+    "stock.quantity": {
+      $gte: 20
+    }
+  })
+  .toArray();
 
-console.log(result);
+console.dir(result, {depth: 10});
 
 await client.close()
